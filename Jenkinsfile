@@ -1,8 +1,6 @@
 @Library(['share_library_build', 'share_library_test', 'share_library_deploy']) _
-def call () {
-    
+node { 
     // Define environment variables
-    env.SCANNER_HOME = tool 'sonar-scanner'
     env.NEXUS_URL = '192.168.66.6:8081'
     env.NEXUS_CREDENTIALS_ID = 'for-nexus'
     env.NEXUS_REPOSITORY = 'maven-releases'
@@ -10,9 +8,9 @@ def call () {
     env.NEXUS_ARTIFACT_ID = 'database_service_project'
     env.ARTIFACT_VERS = "1.${env.BUILD_ID}"
 
-    def branch = env.BRANCH_NAME
-
-    node ('node-01'){
+    def branch = env.BRANCH_NAME ?: 'unknown-branch'
+    
+    node ('JDK8'){
         checkOutSCM()
         buildSpringboot()
         unitTestJava()
@@ -20,13 +18,22 @@ def call () {
 
         if(branch=='main' || branch.startsWith('uat'))
         {
+            def gitCommit = env.GIT_COMMIT ?: 'unknownCommit'
+            if(branch.startsWith('uat'))
+            {
+                env.DEPLOY_TAG = "${new Date().format('yyyyMMddHHmmss')}-uat-${gitCommit.substring(0, 7)}"
+            }
+            else
+            {
+                env.DEPLOY_TAG = "${new Date().format('yyyyMMddHHmmss')}-release"
+            }
             packageSpringboot()
             pushArtifactNexusJava()
         }
 
     }
     if(branch=='main' || branch.startsWith('uat')){
-        node ('node-02')
+        node ('JDK17')
         {
             pullArtifactNexusJava()
             deployJava()
