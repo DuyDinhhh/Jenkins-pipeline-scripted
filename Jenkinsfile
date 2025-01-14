@@ -10,7 +10,7 @@ node {
 
     def branch = env.BRANCH_NAME
 
-    node ('node-01'){
+    node ('JDK8'){
         checkOutSCM()
         buildSpringboot()
         unitTestJava()
@@ -24,7 +24,7 @@ node {
 
     }
     if(branch=='main' || branch.startsWith('uat')){
-        node ('node-02')
+        node ('JDK17')
         {
             pullArtifactNexusJava()
             deployJava()
