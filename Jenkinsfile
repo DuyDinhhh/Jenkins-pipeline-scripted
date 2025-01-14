@@ -1,5 +1,5 @@
 @Library(['share_library_build', 'share_library_test', 'share_library_deploy']) _
-def call () {
+node {
     
     // Define environment variables
     env.SCANNER_HOME = tool 'sonar-scanner'
