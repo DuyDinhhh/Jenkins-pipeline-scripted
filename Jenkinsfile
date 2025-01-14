@@ -9,6 +9,14 @@ node {
     env.ARTIFACT_VERS = "1.${env.BUILD_ID}"
 
     def branch = env.BRANCH_NAME
+    if(branch.startsWith('uat'))
+    {
+        env.DEPLOY_TAG = "${new Date().format('yyyyMMddHHmmss')}-uat-${env.GIT_COMMIT.substring(0, 7)}"
+    }
+    if( branch=='main' )
+    {
+        env.DEPLOY_TAG = "${new Date().format('yyyyMMddHHmmss')}-release"
+    }
 
     node ('JDK8'){
         checkOutSCM()
