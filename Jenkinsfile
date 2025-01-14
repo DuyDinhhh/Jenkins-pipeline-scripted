@@ -7,8 +7,7 @@ node {
     env.NEXUS_GROUP = 'com/javaproject'
     env.NEXUS_ARTIFACT_ID = 'database_service_project'
     env.ARTIFACT_VERS = "1.${env.BUILD_ID}"
-    def branch = env.BRANCH_NAME
-
+    
     def branch = env.BRANCH_NAME ?: 'unknown-branch'
     
     node ('JDK8'){
