@@ -8,10 +8,11 @@ node {
     env.NEXUS_ARTIFACT_ID = 'database_service_project'
     env.ARTIFACT_VERS = "1.${env.BUILD_ID}"
 
-    def branch = env.BRANCH_NAME
+    def branch = env.BRANCH_NAME ?: 'unknown-branch'
+    def gitCommit = env.GIT_COMMIT ?: 'unknown-commit'
     if(branch.startsWith('uat'))
     {
-        env.DEPLOY_TAG = "${new Date().format('yyyyMMddHHmmss')}-uat-${env.GIT_COMMIT.substring(0, 7)}"
+        env.DEPLOY_TAG = "${new Date().format('yyyyMMddHHmmss')}-uat-${gitCommit.substring(0, 7)}"
     }
     if( branch=='main' )
     {
