@@ -2,6 +2,7 @@
 node { 
     // Define environment variables
     env.NEXUS_URL = '192.168.66.6:8081'
+    env.NEXUS_URL_DOCKER = '192.168.66.6:8082'
     env.NEXUS_CREDENTIALS_ID = 'for-nexus'
     env.NEXUS_REPOSITORY = 'maven-releases'
     env.NEXUS_GROUP = 'com/javaproject'
@@ -30,7 +31,7 @@ node {
             packageSpringboot()
             pushArtifactNexusJava()
             // Docker lab
-	        buildDockerNexus()
+	    buildDockerNexus()
             pushDockerNexus()
         }
     }
