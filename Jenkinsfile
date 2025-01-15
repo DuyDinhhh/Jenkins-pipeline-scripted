@@ -29,6 +29,9 @@ node {
             }
             packageSpringboot()
             pushArtifactNexusJava()
+            // Docker lab
+	        buildDockerNexus()
+            pushDockerNexus()
         }
     }
     if(branch=='main' || branch.startsWith('uat')){
