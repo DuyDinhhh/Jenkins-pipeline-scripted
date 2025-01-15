@@ -1,5 +1,5 @@
 @Library(['share_library_build', 'share_library_test', 'share_library_deploy']) _
-node { 
+node {
     // Define environment variables
     env.NEXUS_URL_DOCKER = '192.168.66.6:8082'
     env.NEXUS_URL = '192.168.66.6:8081'
@@ -10,7 +10,7 @@ node {
     env.ARTIFACT_VERS = "1.${env.BUILD_ID}"
 
     def branch = env.BRANCH_NAME ?: 'unknown-branch'
-    
+
     node ('JDK8'){
         checkOutSCM()
         buildSpringboot()
@@ -29,9 +29,8 @@ node {
                 env.DEPLOY_TAG = "${new Date().format('yyyyMMddHHmmss')}-release"
             }
             packageSpringboot()
-            pushArtifactNexusJava()
-	    // Docker lab
-	    buildDockerNexus()
+            // Docker lab
+            buildDockerNexus()
             pushDockerNexus()
         }
 
@@ -39,9 +38,9 @@ node {
     if(branch=='main' || branch.startsWith('uat')){
         node ('JDK17')
         {
-            pullArtifactNexusJava()
-            deployJava()
-            //tagSCM()
+            pullDockerImage()
+            deployDocker()
+	    //tagSCM()
             healthCheck()
         }
     }
